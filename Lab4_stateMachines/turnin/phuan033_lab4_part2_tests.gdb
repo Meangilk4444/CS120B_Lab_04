@@ -33,20 +33,29 @@ setPINA 0x00
 continue 2
 expectPORTC 0x07
 expect state INIT
+checkResult
 
-test "PINA: 0x00, 0x01 => PORTC: 0x08 state: INCREASE"
+test "PINA:  0x01 => PORTC: 0x08 state: INCREASE"
 set state = START
-setPINA 0x00 #still in init state
-continue 2
 setPINA 0x01 #becomes increase state
 continue 2
 expectPORTC  0x08
 expect state INCREASE
 checkResult
 
-test "PINA: 0x00, 0x01, 0x01 =>PORTC: 0x09 state: INCREASE"
+test "PINA: 0x01, 0x01 =>PORTC: 0x09 state: INCREASE"
 set state = START
-setPINA 0x00
+setPINA 0x01
+continue 2
+setPINA 0x01
+continue 2
+expectPORTC 0x09
+expect state INCREASE
+checkResult
+
+test "PINA:  0x01, 0x01, 0x01 => PORTC: 0x09 state: INCREASE"
+set state = START
+setPINA 0x01
 continue 2
 setPINA 0x01
 continue 2
@@ -56,24 +65,8 @@ expectPORTC 0x09
 expect state INCREASE
 checkResult
 
-test "PINA: 0x00, 0x01, 0x01, 0x01 => PORTC: 0x09 state: INCREASE"
+test "PINA:  0x01, 0x01, 0x01 => PORTC: 0x09 state: INCREASE"
 set state = START
-setPINA 0x00
-continue 2
-setPINA 0x01
-continue 2
-setPINA 0x01
-continue 2
-setPINA 0x01
-continue 2
-expectPORTC 0x09
-expect state INCREASE
-checkResult
-
-test "PINA: 0x00, 0x01, 0x01, 0x01, 0x02 => PORTC: 0x08 state: DECREASE"
-set state = START
-setPINA 0x00
-continue 2
 setPINA 0x01
 continue 2
 setPINA 0x01
@@ -86,33 +79,42 @@ expectPORTC 0x08
 expect state DECREASE
 checkResult
 
-test "PINA: 0x00, 0x03 => PORTC: 0x00 state: RESET"
+
+test "PINA 0x00 => PORTC 7"
 set state = START
 setPINA 0x00
 continue 2
-setPINA 0x03
-continue 2
-expectPORTC 0x00
-expect state RESET
+expectPORTC 0x07
+expect state INIT
 checkResult
 
-test "PINA: 0x00, 0x03, 0x03, 0x01, 0x01, 0x03 => PORTC: 0x00 state: RESET"
+test "PINA 0x02 => PORTC 6"
 set state = START
-setPINA 0x00
+setPINA 0x02
 continue 2
-setPINA 0x03
-continue 2
-setPINA 0x03
-continue 2
-setPINA 0x01
-continue 2
-setPINA 0x01
-continue 2
-setPINA 0x03
-continue 2
-expectPORTC 0x00
-expect state RESET
+expectPORTC 0x06
+expect state DECREASE
 checkResult
+
+test"PINA 0x01 0x02 => PORTC8"
+set state = START
+setPINA 0x01
+continue 2
+setPINA 0x02
+continue 2
+expectPORTC 0x07
+expect state DECREASE
+checkResult
+
+test "PINA 0x02 0x01 => PORTC 7"
+set state = START
+setPINA 0x02
+continue 2
+setPINA 0x01
+continue 2
+expectPORTC 0x07
+expect state INCREASE
+checkResult 
 # Report on how many tests passed/tests ran
 set $passed=$tests-$failed
 eval "shell echo Passed %d/%d tests.\n",$passed,$tests
