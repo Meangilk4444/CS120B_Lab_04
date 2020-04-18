@@ -49,50 +49,20 @@ void Tick()
 			break;
 
 		case INCREASE:
-                        if(button0 && !button1)
-                        {
-                                state = WAIT_IN;
-                        }
-                        else if(!button0 && button1)
-                        {
-                                state = DECREASE;
-                        }
-                        else if(button0 && button1)
-                        {
-                                state = RESET;
-                        }
-                        else
-                        {
-                                state = INIT;
-                        }		
-			
+                        
+			state = WAIT_IN;
+
 			break;
 			
 		case DECREASE:
-			
-                        if(button0 && !button1)
-                        {
-                                state = INCREASE;
-                        }
-                        else if(!button0 && button1)
-                        {
-                                state = WAIT_DE;
-                        }
-                        else if(button0 && button1)
-                        {
-                                state = RESET;
-                        }
-                        else
-                        {
-                                state = INIT;
-                        }
-			
+
+			state = WAIT_DE;			
 		
 			break;
 		case WAIT_IN:
-			if(!button0 && button1)
+			if(!button0 && !button1)
 			{
-				state = DECREASE;
+				state = INIT;
 			}
 			else if(button0 && button1)
 			{
@@ -107,9 +77,9 @@ void Tick()
 
 		case WAIT_DE:
 		
-			if(button0 && !button1)
+			if(!button0 && !button1)
 			{
-				state = INCREASE;
+				state = INIT;
 			}
 			else if(button0 && button1)
 			{
@@ -123,19 +93,8 @@ void Tick()
 			break;
 
 		case RESET:
-			if(button0 && !button1)
-			{
-				state = INCREASE;
-			}
-			else if(!button0 && button1)
-			{
-				state = DECREASE;
-			}
-			else
-			{
-				state = RESET;
-			}
-
+			
+			state = WAIT_DE;
 	
 		default:
 			state = START;
