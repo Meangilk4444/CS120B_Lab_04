@@ -11,7 +11,7 @@
 #ifdef _SIMULATE_
 #include "simAVRHeader.h"
 #endif
-enum States{START, INIT, INCREASE, WAIT_IN, DECREASE, WAIT_DE, RESET} state;
+enum States{START, INIT, INCREASE, DECREASE, WAIT_IN, WAIT_DE, RESET} state;
 unsigned char button0;
 unsigned char button1;
 unsigned char tmpC;
@@ -23,11 +23,12 @@ void Tick()
 
 	switch(state){
 		case START:
+			PORTC = 0x07;
 			state = INIT;
 			break;
 		
 		case INIT:
-			PORTC = 0x07;
+			
 			if(button0 && !button1)
 			{
 				state = INCREASE;
@@ -48,35 +49,48 @@ void Tick()
 			break;
 
 		case INCREASE:
-			if(button1 && button0)
-			{
-				state = RESET;
-			}
-			else
-			{
-				state = WAIT_IN;
-			}
+                        if(button0 && !button1)
+                        {
+                                state = WAIT_IN;
+                        }
+                        else if(!button0 && button1)
+                        {
+                                state = DECREASE;
+                        }
+                        else if(button0 && button1)
+                        {
+                                state = RESET;
+                        }
+                        else
+                        {
+                                state = INIT;
+                        }		
 			
 			break;
 			
 		case DECREASE:
-			if(button1 && button0)
-			{
-				state = RESET;
-			}
-			else 
-			{
-				state = WAIT_DE;
-			}
+			
+                        if(button0 && !button1)
+                        {
+                                state = INCREASE;
+                        }
+                        else if(!button0 && button1)
+                        {
+                                state = WAIT_DE;
+                        }
+                        else if(button0 && button1)
+                        {
+                                state = RESET;
+                        }
+                        else
+                        {
+                                state = INIT;
+                        }
+			
 		
 			break;
-
 		case WAIT_IN:
-			if(button0 && !button1)
-			{
-				state = INCREASE;
-			}
-			else if(!button0 && button1)
+			if(!button0 && button1)
 			{
 				state = DECREASE;
 			}
@@ -88,29 +102,41 @@ void Tick()
 			{
 				state = WAIT_IN;
 			}
-
+	
 			break;
 
 		case WAIT_DE:
-                        if(button0 && !button1)
-                        {
-                                state = INCREASE;
-                        }
-                        else if(!button0 && button1)
-                        {
-                                state = DECREASE;
-                        }
-                        else if(button0 && button1)
-                        {
-                                state = RESET;                                                                                                  }
-                        else
-                        {
-                                state = WAIT_DE;
-                        }
+		
+			if(button0 && !button1)
+			{
+				state = INCREASE;
+			}
+			else if(button0 && button1)
+			{
+				state = RESET;
+			}
+			else
+			{
+				state = WAIT_DE;
+			}
 
 			break;
 
+		case RESET:
+			if(button0 && !button1)
+			{
+				state = INCREASE;
+			}
+			else if(!button0 && button1)
+			{
+				state = DECREASE;
+			}
+			else
+			{
+				state = RESET;
+			}
 
+	
 		default:
 			state = START;
 			break;
@@ -143,12 +169,6 @@ void Tick()
 
 		case RESET: 
 			PORTC = 0x00;
-			break;
-
-		case WAIT_IN:
-			break;
-
-		case WAIT_DE:
 			break;
 	}
 
