@@ -95,6 +95,7 @@ void Tick()
 		case RESET:
 			
 			state = WAIT_DE;
+			break;
 	
 		default:
 			state = START;
