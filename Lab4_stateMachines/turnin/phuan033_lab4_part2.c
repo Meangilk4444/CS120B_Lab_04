@@ -115,6 +115,10 @@ void Tick()
 			{
 				PORTC = PORTC + 1;
 			}
+			else
+			{
+				PORTC = 0x09;
+			}
 
 			break;
 
@@ -122,6 +126,10 @@ void Tick()
 			if(PORTC > 0)
 			{
 				PORTC = PORTC - 1;
+			}
+			else
+			{
+				PORTC = 0x00;
 			}
 			
 			break;
