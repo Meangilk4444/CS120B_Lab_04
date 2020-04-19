@@ -11,7 +11,7 @@
 #ifdef _SIMULATE_
 #include "simAVRHeader.h"
 #endif
-enum States{START, HASHTAG, RELEASED_HASHTAG, Y, RELEASED_Y} state;
+enum States{START, HASHTAG, RELEASED_HASHTAG, Y, RELEASED_Y, RELEASED_HASHTAG_TWO, Y_TWO, RELEASED_Y_TWO} state;
 unsigned char hash = 0x00;
 unsigned char why = 0x00;
 unsigned char lock = 0x00;
@@ -25,6 +25,7 @@ void Tick()
 		
 		case START:
 			state = HASHTAG;
+			PORTB = 0x00;
 			break;
 
 		case HASHTAG:
@@ -59,7 +60,7 @@ void Tick()
 			}
 			else
 			{
-				state = Y;
+				state = RELEASED_HASHTAG;
 			}
 			
 			break;						
@@ -72,7 +73,7 @@ void Tick()
 			else if(why == 0x02)
 			{
 				state = RELEASED_Y;
-			//	PORTB = 0x01;
+		
 			}
 			else
 			{
@@ -83,16 +84,61 @@ void Tick()
 
 		case RELEASED_Y:
 
-			if(why == 0x02)
-			{
-				state = RELEASED_Y;
-//				PORTB = 0x00;
-			}
 			if(lock == 0x80)
 			{
 				state = HASHTAG;
 			}
+			else if(hash == 0x04)
+			{
+				state = RELEASED_HASHTAG_TWO;
+			}
+			else
+			{
+				state = RELEASED_Y;
+			}
+
 			break;	
+	
+		case RELEASED_HASHTAG_TWO:
+			
+			if(lock == 0x80)
+			{
+				state = HASHTAG;
+			}
+			else if(hash == 0x04)
+			{
+				state = RELEASED_HASHTAG_TWO;
+			}
+			else if(hash == 0x00)
+			{
+				state = Y_TWO;
+			}
+			else
+			{
+				state = RELEASED_HASHTAG_TWO;
+			}
+			break;
+
+		case Y_TWO:
+			
+			if(lock == 0x80)
+			{
+				state = HASHTAG;
+			}
+			else if(why == 0x02)
+			{
+				state = RELEASED_Y_TWO;
+			}
+			else
+			{
+				state = Y_TWO;
+			}
+			break;
+
+		case RELEASED_Y_TWO:
+
+			state = HASHTAG;
+			break;
 
 		default:
 			state = START;
@@ -117,14 +163,20 @@ void Tick()
 
 		case RELEASED_Y:
 			PORTC = 0x03;
-			if(PORTB = 0x00)
-			{
-				PORTB = 0x01;
-			}
-			else
-			{
-				PORTB = 0x00;
-			}
+			PORTB = 0x01;
+			break;
+
+		case RELEASED_HASHTAG_TWO:
+			PORTC = 0x04;
+			break;
+
+		case Y_TWO:
+			PORTC = 0x05;
+			break;
+
+		case RELEASED_Y_TWO:
+			PORTB = 0x00;
+			PORTC = 0x06;
 			break;
 	}
 }
