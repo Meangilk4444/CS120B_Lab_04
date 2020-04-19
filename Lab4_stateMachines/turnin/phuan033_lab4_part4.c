@@ -72,7 +72,7 @@ void Tick()
 			else if(why == 0x02)
 			{
 				state = RELEASED_Y;
-				PORTB = 0x01;
+			//	PORTB = 0x01;
 			}
 			else
 			{
@@ -86,7 +86,7 @@ void Tick()
 			if(why == 0x02)
 			{
 				state = RELEASED_Y;
-				PORTB = 0x00;
+//				PORTB = 0x00;
 			}
 			if(lock == 0x80)
 			{
@@ -117,7 +117,14 @@ void Tick()
 
 		case RELEASED_Y:
 			PORTC = 0x03;
-	//		PORTB = 0x01;
+			if(PORTB = 0x00)
+			{
+				PORTB = 0x01;
+			}
+			else
+			{
+				PORTB = 0x00;
+			}
 			break;
 	}
 }
