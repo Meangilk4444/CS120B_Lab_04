@@ -64,7 +64,7 @@ setPINA 0x02
 continue 2
 setPINA 0x02
 continue 2
-expectPORTB 0x01
+expectPORTB 0x00
 expectPORTC 0x03
 checkResult
 
