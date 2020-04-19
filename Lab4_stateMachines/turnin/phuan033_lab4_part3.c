@@ -86,14 +86,11 @@ void Tick()
 			{
 				state = RELEASED_Y;
 			}
-			else if(lock == 0x80)
+			if(lock == 0x80)
 			{
 				state = HASHTAG;
 			}
-			else
-			{
-				break;
-			}
+			break;	
 
 		default:
 			state = START;
@@ -131,7 +128,7 @@ DDRC = 0xFF; PORTC = 0x00;
 DDRB = 0xFF; PORTB = 0x00;
     /* Insert your solution below */
     state = START;
-    PORTB = 0x00;
+ 
     while (1) {
 		Tick();
     }
